@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Post>
+@{
+    var postId = TempData["PostId"] as string;
+    var action = TempData["Action"] as PostAction? ?? PostAction.Updated;
+}
+@if (postId != null)
+{
+    <!-- PostId: @postId -->
+    <div class="panel success">
+        Post @action.ToString().ToLower() (@Html.ActionLink("Click here to see", "Post", new { id = postId }))
+    </div>
+}
+
+<p class="pull-right">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPostModal">Create Post</button>
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Body)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr class="@((postId == item.Id) ? "success" : "" )">
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Post", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div class="modal fade" id="createPostModal" tabindex="-1" role="dialog">
+    @Html.Partial("_CreatePost", new Post())
+</div>
